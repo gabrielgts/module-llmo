@@ -1,0 +1,67 @@
+<?php
+/** @var \Gtstudio\Llmo\Block\Adminhtml\Crawler\Activity $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$summary = $block->getBotSummary();
+$hits    = $block->getRecentHits();
+?>
+<div class="llmo-crawler">
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title">
+                <?= $escaper->escapeHtml(__('Hits per AI bot (last 30 days)')) ?>
+            </span>
+        </div>
+        <?php if ($summary === []): ?>
+            <p><?= $escaper->escapeHtml(__('No crawler hits recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Bot')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Hits')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($summary as $row): ?>
+                    <tr>
+                        <td><code><?= $escaper->escapeHtml($row['bot_code']) ?></code></td>
+                        <td><?= (int) $row['count'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Most recent hits')) ?></span>
+        </div>
+        <?php if ($hits === []): ?>
+            <p><?= $escaper->escapeHtml(__('No crawler hits recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('When')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Bot')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Path')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Store ID')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Referrer')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($hits as $hit): ?>
+                    <tr>
+                        <td><?= $escaper->escapeHtml((string) $hit->getData('hit_at')) ?></td>
+                        <td><code><?= $escaper->escapeHtml((string) $hit->getData('bot_code')) ?></code></td>
+                        <td><?= $escaper->escapeHtml((string) $hit->getData('path')) ?></td>
+                        <td><?= (int) $hit->getData('store_id') ?></td>
+                        <td><?= $escaper->escapeHtml((string) ($hit->getData('referrer') ?? '')) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

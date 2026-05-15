@@ -1,0 +1,143 @@
+<?php
+/** @var \Gtstudio\Llmo\Block\Adminhtml\Dashboard\Snapshot $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$snapshot = $block->getSnapshot();
+?>
+<div class="llmo-dashboard">
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('LLMO Dashboard')) ?></span>
+            <small>
+                <?= $escaper->escapeHtml(__('Snapshot generated at')) ?>
+                <code><?= $escaper->escapeHtml($snapshot->getGeneratedAt()) ?></code>
+            </small>
+        </div>
+        <form action="<?= $escaper->escapeUrl($block->getRefreshUrl()) ?>" method="post">
+            <input type="hidden" name="form_key"
+                   value="<?= $escaper->escapeHtml($block->getFormKey()) ?>"/>
+            <button type="submit" class="action-secondary">
+                <?= $escaper->escapeHtml(__('Refresh now')) ?>
+            </button>
+        </form>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Feed health')) ?></span>
+        </div>
+        <?php if ($snapshot->getFeedHealth() === []): ?>
+            <p><?= $escaper->escapeHtml(__('No feed runs recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Exporter')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Status')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Items')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Errors')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Warnings')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Last Run')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($snapshot->getFeedHealth() as $row): ?>
+                    <tr>
+                        <td><code><?= $escaper->escapeHtml((string) $row['exporter_code']) ?></code></td>
+                        <td><?= $escaper->escapeHtml((string) $row['status']) ?></td>
+                        <td><?= (int) ($row['item_count'] ?? 0) ?></td>
+                        <td><?= (int) ($row['errors'] ?? 0) ?></td>
+                        <td><?= (int) ($row['warnings'] ?? 0) ?></td>
+                        <td><?= $escaper->escapeHtml((string) ($row['finished_at'] ?? $row['started_at'])) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Crawler activity (30 d)')) ?></span>
+        </div>
+        <?php if ($snapshot->getCrawlerActivity() === []): ?>
+            <p><?= $escaper->escapeHtml(__('No crawler hits recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Bot')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Hits')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($snapshot->getCrawlerActivity() as $row): ?>
+                    <tr>
+                        <td><code><?= $escaper->escapeHtml((string) ($row['bot_code'] ?? '')) ?></code></td>
+                        <td><?= (int) ($row['count'] ?? 0) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Attribution funnel (30 d)')) ?></span>
+        </div>
+        <?php if ($snapshot->getAttributionFunnel() === []): ?>
+            <p><?= $escaper->escapeHtml(__('No attribution events recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Source')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Orders')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Revenue')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($snapshot->getAttributionFunnel() as $row): ?>
+                    <tr>
+                        <td><code><?= $escaper->escapeHtml((string) ($row['source'] ?? '')) ?></code></td>
+                        <td><?= (int) ($row['orders'] ?? 0) ?></td>
+                        <td><?= $escaper->escapeHtml(\number_format((float) ($row['revenue'] ?? 0), 2)) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Top products from AI traffic (30 d)')) ?></span>
+        </div>
+        <?php if ($snapshot->getTopProducts() === []): ?>
+            <p><?= $escaper->escapeHtml(__('No data yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('SKU')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Name')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Units')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Revenue')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Top source')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($snapshot->getTopProducts() as $row): ?>
+                    <tr>
+                        <td><code><?= $escaper->escapeHtml((string) ($row['sku'] ?? '')) ?></code></td>
+                        <td><?= $escaper->escapeHtml((string) ($row['name'] ?? '')) ?></td>
+                        <td><?= (int) ($row['units'] ?? 0) ?></td>
+                        <td><?= $escaper->escapeHtml(\number_format((float) ($row['revenue'] ?? 0), 2)) ?></td>
+                        <td><code><?= $escaper->escapeHtml((string) ($row['top_source'] ?? '')) ?></code></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

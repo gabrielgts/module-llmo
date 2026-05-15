@@ -1,0 +1,109 @@
+<?php
+/** @var \Gtstudio\Llmo\Block\Adminhtml\Validation\Manage $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$exporters = $block->getExporters();
+$stores    = $block->getStores();
+$logs      = $block->getRecentLogs();
+?>
+<div class="llmo-validation">
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Run Validation')) ?></span>
+        </div>
+        <form action="<?= $escaper->escapeUrl($block->getRunUrl()) ?>" method="post">
+            <input type="hidden" name="form_key"
+                   value="<?= $escaper->escapeHtml($block->getFormKey()) ?>"/>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-exporter">
+                    <?= $escaper->escapeHtml(__('Exporter')) ?>
+                </label>
+                <select id="llmo-exporter" name="exporter" class="admin__control-select">
+                    <?php foreach ($exporters as $exporter): ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($exporter->code()) ?>">
+                            <?= $escaper->escapeHtml($exporter->label()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-store">
+                    <?= $escaper->escapeHtml(__('Store')) ?>
+                </label>
+                <select id="llmo-store" name="store_id" class="admin__control-select">
+                    <option value=""><?= $escaper->escapeHtml(__('Current admin store')) ?></option>
+                    <?php foreach ($stores as $store): ?>
+                        <option value="<?= (int) $store->getId() ?>">
+                            <?= $escaper->escapeHtml($store->getCode()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <button type="submit" class="action-primary">
+                <?= $escaper->escapeHtml(__('Validate')) ?>
+            </button>
+        </form>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Recent Validations')) ?></span>
+        </div>
+        <?php if ($logs === []): ?>
+            <p><?= $escaper->escapeHtml(__('No validations recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th><?= $escaper->escapeHtml(__('Exporter')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Store ID')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Run ID')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Passed')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Errors')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Warnings')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Validated At')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Top Issues')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($logs as $log): ?>
+                    <?php $issues = $block->decodeReport($log); ?>
+                    <tr>
+                        <td><?= (int) $log->getData('validation_id') ?></td>
+                        <td><code><?= $escaper->escapeHtml((string) $log->getData('exporter_code')) ?></code></td>
+                        <td><?= (int) $log->getData('store_id') ?></td>
+                        <td>
+                            <?= $escaper->escapeHtml((string) ($log->getData('run_id') ?? '—')) ?>
+                        </td>
+                        <td>
+                            <?= ((int) $log->getData('passed')) === 1
+                                ? $escaper->escapeHtml(__('yes'))
+                                : $escaper->escapeHtml(__('no')) ?>
+                        </td>
+                        <td><?= (int) $log->getData('error_count') ?></td>
+                        <td><?= (int) $log->getData('warning_count') ?></td>
+                        <td><?= $escaper->escapeHtml((string) $log->getData('validated_at')) ?></td>
+                        <td>
+                            <?php $shown = \array_slice($issues, 0, 3); ?>
+                            <?php if ($shown === []): ?>
+                                <em><?= $escaper->escapeHtml(__('none')) ?></em>
+                            <?php else: ?>
+                                <ul>
+                                    <?php foreach ($shown as $issue): ?>
+                                        <li>
+                                            <strong>
+                                                <?= $escaper->escapeHtml((string) ($issue['severity'] ?? '')) ?>:
+                                            </strong>
+                                            <?= $escaper->escapeHtml((string) ($issue['message'] ?? '')) ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

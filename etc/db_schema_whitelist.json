@@ -1,0 +1,121 @@
+{
+    "gtstudio_llmo_feed_run": {
+        "column": {
+            "run_id": true,
+            "exporter_code": true,
+            "store_id": true,
+            "status": true,
+            "item_count": true,
+            "file_path": true,
+            "error_message": true,
+            "started_at": true,
+            "finished_at": true
+        },
+        "index": {
+            "GTSTUDIO_LLMO_FEED_RUN_EXPORTER_STARTED": true,
+            "GTSTUDIO_LLMO_FEED_RUN_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "gtstudio_llmo_validation_log": {
+        "column": {
+            "validation_id": true,
+            "run_id": true,
+            "exporter_code": true,
+            "store_id": true,
+            "passed": true,
+            "error_count": true,
+            "warning_count": true,
+            "report_json": true,
+            "validated_at": true
+        },
+        "index": {
+            "GTSTUDIO_LLMO_VALIDATION_LOG_EXPORTER_VALIDATED": true,
+            "GTSTUDIO_LLMO_VALIDATION_LOG_RUN_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GTSTUDIO_LLMO_VALIDATION_LOG_RUN_ID_FK": true
+        }
+    },
+    "gtstudio_llmo_crawler_hit": {
+        "column": {
+            "hit_id": true,
+            "bot_code": true,
+            "user_agent": true,
+            "path": true,
+            "store_id": true,
+            "status_code": true,
+            "referrer": true,
+            "hit_at": true
+        },
+        "index": {
+            "GTSTUDIO_LLMO_CRAWLER_HIT_BOT_DATE": true,
+            "GTSTUDIO_LLMO_CRAWLER_HIT_HIT_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "llmo_referrer_agent": true,
+            "llmo_utm_source": true,
+            "llmo_utm_medium": true,
+            "llmo_utm_campaign": true,
+            "llmo_utm_content": true
+        },
+        "index": {
+            "GTSTUDIO_LLMO_SALES_ORDER_REFERRER_AGENT": true,
+            "GTSTUDIO_LLMO_SALES_ORDER_UTM_SOURCE": true
+        }
+    },
+    "gtstudio_llmo_attribution_event": {
+        "column": {
+            "event_id": true,
+            "order_id": true,
+            "order_increment_id": true,
+            "referrer_agent": true,
+            "utm_source": true,
+            "utm_medium": true,
+            "utm_campaign": true,
+            "utm_content": true,
+            "revenue": true,
+            "currency": true,
+            "store_id": true,
+            "event_at": true
+        },
+        "index": {
+            "GTSTUDIO_LLMO_ATTRIBUTION_EVENT_REFERRER_DATE": true,
+            "GTSTUDIO_LLMO_ATTRIBUTION_EVENT_UTM_SOURCE_DATE": true,
+            "GTSTUDIO_LLMO_ATTRIBUTION_EVENT_EVENT_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GTSTUDIO_LLMO_ATTRIBUTION_EVENT_ORDER_ID_FK": true
+        }
+    },
+    "gtstudio_llmo_campaign": {
+        "column": {
+            "campaign_id": true,
+            "code": true,
+            "name": true,
+            "exporter_code": true,
+            "target_url": true,
+            "is_active": true,
+            "config_json": true,
+            "last_run_at": true,
+            "last_status": true,
+            "last_message": true
+        },
+        "index": {
+            "GTSTUDIO_LLMO_CAMPAIGN_EXPORTER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GTSTUDIO_LLMO_CAMPAIGN_CODE": true
+        }
+    }
+}

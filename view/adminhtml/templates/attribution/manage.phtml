@@ -1,0 +1,84 @@
+<?php
+/** @var \Gtstudio\Llmo\Block\Adminhtml\Attribution\Manage $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$summary = $block->getSourceSummary();
+$events  = $block->getRecentEvents();
+?>
+<div class="llmo-attribution">
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title">
+                <?= $escaper->escapeHtml(__('Revenue by AI / UTM source (last 30 days)')) ?>
+            </span>
+        </div>
+        <?php if ($summary === []): ?>
+            <p><?= $escaper->escapeHtml(__('No attribution events recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Source')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Orders')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Revenue')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($summary as $row): ?>
+                    <tr>
+                        <td><code><?= $escaper->escapeHtml($row['source']) ?></code></td>
+                        <td><?= (int) $row['orders'] ?></td>
+                        <td><?= $escaper->escapeHtml(\number_format($row['revenue'], 2)) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Recent events')) ?></span>
+        </div>
+        <?php if ($events === []): ?>
+            <p><?= $escaper->escapeHtml(__('No attribution events recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('When')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Order')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Agent')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('UTM Source')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('UTM Medium')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('UTM Campaign')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Revenue')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($events as $event): ?>
+                    <tr>
+                        <td><?= $escaper->escapeHtml((string) $event->getData('event_at')) ?></td>
+                        <td>
+                            <?= $escaper->escapeHtml((string) ($event->getData('order_increment_id') ?? '—')) ?>
+                        </td>
+                        <td>
+                            <code>
+                                <?= $escaper->escapeHtml((string) ($event->getData('referrer_agent') ?? '')) ?>
+                            </code>
+                        </td>
+                        <td><?= $escaper->escapeHtml((string) ($event->getData('utm_source') ?? '')) ?></td>
+                        <td><?= $escaper->escapeHtml((string) ($event->getData('utm_medium') ?? '')) ?></td>
+                        <td><?= $escaper->escapeHtml((string) ($event->getData('utm_campaign') ?? '')) ?></td>
+                        <td>
+                            <?= $escaper->escapeHtml(
+                                \number_format((float) ($event->getData('revenue') ?? 0), 2)
+                            ) ?>
+                            <?= $escaper->escapeHtml((string) ($event->getData('currency') ?? '')) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

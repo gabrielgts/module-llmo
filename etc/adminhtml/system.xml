@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="llmo" translate="label" sortOrder="30"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <tab>service</tab>
+            <label>LLMO</label>
+            <resource>Gtstudio_Llmo::config</resource>
+
+            <group id="general" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable LLMO</label>
+                    <comment>When disabled, the feed REST endpoint, crawler logging, and attribution capture are inactive.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="feed" translate="label" sortOrder="20"
+                   showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Product Feed</label>
+
+                <field id="page_size" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Builder Page Size</label>
+                    <comment>Number of products loaded per batch when building the feed. Default: 200. Range: 50–1000.</comment>
+                    <validate>required-entry validate-greater-than-zero validate-digits</validate>
+                </field>
+
+                <field id="rebuild_schedule" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Rebuild Schedule</label>
+                    <comment>Standard cron expression. Default: 0 */2 * * * (every 2 hours).</comment>
+                </field>
+            </group>
+
+            <group id="crawlers" translate="label" sortOrder="30"
+                   showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>AI Crawler Controls</label>
+                <comment>Selected bots are explicitly allowed in robots.txt; the rest get a Disallow rule. Hits are logged for analytics.</comment>
+
+                <field id="allowed_bots" translate="label comment" type="multiselect" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Allowed AI Bots</label>
+                    <source_model>Gtstudio\Llmo\Model\Config\Source\AiCrawler</source_model>
+                </field>
+
+                <field id="extra_directives" translate="label comment" type="textarea" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Extra robots.txt Directives</label>
+                    <comment>Free-form lines appended to robots.txt after the AI bot rules.</comment>
+                </field>
+
+                <field id="log_sampling" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Hit Log Sampling Rate</label>
+                    <comment>1 in N hits is recorded. Default: 1 (record all). Increase under high traffic.</comment>
+                    <validate>required-entry validate-greater-than-zero validate-digits</validate>
+                </field>
+            </group>
+
+            <group id="dashboard" translate="label" sortOrder="40"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Dashboard</label>
+
+                <field id="snapshot_ttl" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Snapshot TTL (seconds)</label>
+                    <comment>How long the cached snapshot is served before rebuild. Default: 3600.</comment>
+                    <validate>required-entry validate-greater-than-zero validate-digits</validate>
+                </field>
+
+                <field id="rebuild_schedule" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Rebuild Schedule</label>
+                    <comment>Standard cron expression. Default: 15 0 * * * (daily at 00:15).</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

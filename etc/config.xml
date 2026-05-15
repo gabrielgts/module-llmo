@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <llmo>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <feed>
+                <page_size>200</page_size>
+                <rebuild_schedule>0 */2 * * *</rebuild_schedule>
+            </feed>
+            <crawlers>
+                <allowed_bots>GPTBot,OAI-SearchBot,ClaudeBot,anthropic-ai,PerplexityBot,Google-Extended,Applebot-Extended</allowed_bots>
+                <log_sampling>1</log_sampling>
+            </crawlers>
+            <dashboard>
+                <snapshot_ttl>3600</snapshot_ttl>
+                <rebuild_schedule>15 0 * * *</rebuild_schedule>
+            </dashboard>
+        </llmo>
+    </default>
+</config>

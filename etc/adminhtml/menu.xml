@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- LLMO submenu group -->
+        <add id="Gtstudio_Llmo::management"
+             title="LLMO"
+             module="Gtstudio_Llmo"
+             sortOrder="30"
+             parent="Gtstudio_AiConnector::gtstudio"
+             resource="Gtstudio_Llmo::management"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::dashboard"
+             title="Dashboard"
+             module="Gtstudio_Llmo"
+             sortOrder="10"
+             parent="Gtstudio_Llmo::management"
+             action="llmo/dashboard/index"
+             resource="Gtstudio_Llmo::dashboard"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::feed"
+             title="Product Feed"
+             module="Gtstudio_Llmo"
+             sortOrder="20"
+             parent="Gtstudio_Llmo::management"
+             action="llmo/feed/index"
+             resource="Gtstudio_Llmo::feed"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::validation"
+             title="Validation Log"
+             module="Gtstudio_Llmo"
+             sortOrder="30"
+             parent="Gtstudio_Llmo::management"
+             action="llmo/validation/index"
+             resource="Gtstudio_Llmo::validation"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::crawlers"
+             title="Crawlers"
+             module="Gtstudio_Llmo"
+             sortOrder="40"
+             parent="Gtstudio_Llmo::management"
+             action="llmo/crawler/index"
+             resource="Gtstudio_Llmo::crawlers"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::attribution"
+             title="Attribution"
+             module="Gtstudio_Llmo"
+             sortOrder="50"
+             parent="Gtstudio_Llmo::management"
+             action="llmo/attribution/index"
+             resource="Gtstudio_Llmo::attribution"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::campaigns"
+             title="Campaigns"
+             module="Gtstudio_Llmo"
+             sortOrder="60"
+             parent="Gtstudio_Llmo::management"
+             action="llmo/campaign/index"
+             resource="Gtstudio_Llmo::campaigns"
+             translate="title"/>
+
+        <add id="Gtstudio_Llmo::settings"
+             title="Settings"
+             module="Gtstudio_Llmo"
+             sortOrder="70"
+             parent="Gtstudio_Llmo::management"
+             action="adminhtml/system_config/edit/section/llmo"
+             resource="Gtstudio_Llmo::config"
+             translate="title"/>
+    </menu>
+</config>

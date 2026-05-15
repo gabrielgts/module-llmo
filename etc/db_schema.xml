@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="gtstudio_llmo_feed_run" resource="default" engine="innodb" comment="LLMO Feed Run Log">
+        <column xsi:type="int" name="run_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Run Id"/>
+        <column xsi:type="varchar" name="exporter_code" nullable="false" length="64" comment="Exporter Code"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0"
+                comment="Store Id"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" default="pending"
+                comment="Status: pending|running|success|failed|partial"/>
+        <column xsi:type="int" name="item_count" padding="10" unsigned="true" nullable="false" default="0"
+                comment="Items In Feed"/>
+        <column xsi:type="varchar" name="file_path" nullable="true" length="255" comment="Output File Path"/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Error Message"/>
+        <column xsi:type="timestamp" name="started_at" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Started At"/>
+        <column xsi:type="timestamp" name="finished_at" nullable="true" comment="Finished At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="run_id"/>
+        </constraint>
+        <index referenceId="GTSTUDIO_LLMO_FEED_RUN_EXPORTER_STARTED" indexType="btree">
+            <column name="exporter_code"/>
+            <column name="started_at"/>
+        </index>
+        <index referenceId="GTSTUDIO_LLMO_FEED_RUN_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+    <table name="gtstudio_llmo_validation_log" resource="default" engine="innodb"
+           comment="LLMO Feed Validation Log">
+        <column xsi:type="int" name="validation_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Validation Id"/>
+        <column xsi:type="int" name="run_id" padding="10" unsigned="true" nullable="true"
+                comment="Feed Run Id (nullable: ad-hoc validations have no run)"/>
+        <column xsi:type="varchar" name="exporter_code" nullable="false" length="64" comment="Exporter Code"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0"
+                comment="Store Id"/>
+        <column xsi:type="smallint" name="passed" padding="5" unsigned="true" nullable="false" default="0"
+                comment="Overall Pass Flag (0/1)"/>
+        <column xsi:type="int" name="error_count" padding="10" unsigned="true" nullable="false" default="0"
+                comment="Error Count"/>
+        <column xsi:type="int" name="warning_count" padding="10" unsigned="true" nullable="false" default="0"
+                comment="Warning Count"/>
+        <column xsi:type="mediumtext" name="report_json" nullable="true"
+                comment="Full Validation Report (JSON)"/>
+        <column xsi:type="timestamp" name="validated_at" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Validated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="validation_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="GTSTUDIO_LLMO_VALIDATION_LOG_RUN_ID_FK"
+                    table="gtstudio_llmo_validation_log" column="run_id"
+                    referenceTable="gtstudio_llmo_feed_run" referenceColumn="run_id" onDelete="SET NULL"/>
+        <index referenceId="GTSTUDIO_LLMO_VALIDATION_LOG_EXPORTER_VALIDATED" indexType="btree">
+            <column name="exporter_code"/>
+            <column name="validated_at"/>
+        </index>
+        <index referenceId="GTSTUDIO_LLMO_VALIDATION_LOG_RUN_ID" indexType="btree">
+            <column name="run_id"/>
+        </index>
+    </table>
+    <table name="gtstudio_llmo_crawler_hit" resource="default" engine="innodb" comment="LLMO AI Crawler Hit Log">
+        <column xsi:type="int" name="hit_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Hit Id"/>
+        <column xsi:type="varchar" name="bot_code" nullable="false" length="64" comment="Detected Bot Code"/>
+        <column xsi:type="varchar" name="user_agent" nullable="false" length="512" comment="Raw User Agent"/>
+        <column xsi:type="varchar" name="path" nullable="false" length="512" comment="Request Path"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0"
+                comment="Store Id"/>
+        <column xsi:type="smallint" name="status_code" padding="5" unsigned="true" nullable="true"
+                comment="HTTP Status Code"/>
+        <column xsi:type="varchar" name="referrer" nullable="true" length="512" comment="HTTP Referrer"/>
+        <column xsi:type="timestamp" name="hit_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Hit At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="hit_id"/>
+        </constraint>
+        <index referenceId="GTSTUDIO_LLMO_CRAWLER_HIT_BOT_DATE" indexType="btree">
+            <column name="bot_code"/>
+            <column name="hit_at"/>
+        </index>
+        <index referenceId="GTSTUDIO_LLMO_CRAWLER_HIT_HIT_AT" indexType="btree">
+            <column name="hit_at"/>
+        </index>
+    </table>
+    <table name="sales_order">
+        <column xsi:type="varchar" name="llmo_referrer_agent" nullable="true" length="64"
+                comment="LLMO Detected AI Referrer Agent"/>
+        <column xsi:type="varchar" name="llmo_utm_source" nullable="true" length="128"
+                comment="LLMO UTM Source"/>
+        <column xsi:type="varchar" name="llmo_utm_medium" nullable="true" length="64"
+                comment="LLMO UTM Medium"/>
+        <column xsi:type="varchar" name="llmo_utm_campaign" nullable="true" length="128"
+                comment="LLMO UTM Campaign"/>
+        <column xsi:type="varchar" name="llmo_utm_content" nullable="true" length="255"
+                comment="LLMO UTM Content"/>
+        <index referenceId="GTSTUDIO_LLMO_SALES_ORDER_REFERRER_AGENT" indexType="btree">
+            <column name="llmo_referrer_agent"/>
+        </index>
+        <index referenceId="GTSTUDIO_LLMO_SALES_ORDER_UTM_SOURCE" indexType="btree">
+            <column name="llmo_utm_source"/>
+        </index>
+    </table>
+    <table name="gtstudio_llmo_attribution_event" resource="default" engine="innodb"
+           comment="LLMO Conversion Attribution Events">
+        <column xsi:type="int" name="event_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Event Id"/>
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="true"
+                comment="Sales Order Entity Id"/>
+        <column xsi:type="varchar" name="order_increment_id" nullable="true" length="64"
+                comment="Sales Order Increment Id"/>
+        <column xsi:type="varchar" name="referrer_agent" nullable="true" length="64"
+                comment="Detected AI Referrer Agent"/>
+        <column xsi:type="varchar" name="utm_source" nullable="true" length="128" comment="UTM Source"/>
+        <column xsi:type="varchar" name="utm_medium" nullable="true" length="64" comment="UTM Medium"/>
+        <column xsi:type="varchar" name="utm_campaign" nullable="true" length="128" comment="UTM Campaign"/>
+        <column xsi:type="varchar" name="utm_content" nullable="true" length="255" comment="UTM Content"/>
+        <column xsi:type="decimal" name="revenue" scale="4" precision="20" nullable="false" default="0"
+                comment="Order Grand Total"/>
+        <column xsi:type="varchar" name="currency" nullable="false" length="3" default="USD" comment="Currency"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0"
+                comment="Store Id"/>
+        <column xsi:type="timestamp" name="event_at" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Event Timestamp"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="event_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="GTSTUDIO_LLMO_ATTRIBUTION_EVENT_ORDER_ID_FK"
+                    table="gtstudio_llmo_attribution_event" column="order_id"
+                    referenceTable="sales_order" referenceColumn="entity_id" onDelete="SET NULL"/>
+        <index referenceId="GTSTUDIO_LLMO_ATTRIBUTION_EVENT_REFERRER_DATE" indexType="btree">
+            <column name="referrer_agent"/>
+            <column name="event_at"/>
+        </index>
+        <index referenceId="GTSTUDIO_LLMO_ATTRIBUTION_EVENT_UTM_SOURCE_DATE" indexType="btree">
+            <column name="utm_source"/>
+            <column name="event_at"/>
+        </index>
+        <index referenceId="GTSTUDIO_LLMO_ATTRIBUTION_EVENT_EVENT_AT" indexType="btree">
+            <column name="event_at"/>
+        </index>
+    </table>
+    <table name="gtstudio_llmo_campaign" resource="default" engine="innodb"
+           comment="LLMO Campaign / Export Target">
+        <column xsi:type="int" name="campaign_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Campaign Id"/>
+        <column xsi:type="varchar" name="code" nullable="false" length="64" comment="Stable Code"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Display Name"/>
+        <column xsi:type="varchar" name="exporter_code" nullable="false" length="64"
+                comment="Exporter Code in ExporterPool"/>
+        <column xsi:type="varchar" name="target_url" nullable="true" length="512"
+                comment="Optional Push Target Url"/>
+        <column xsi:type="smallint" name="is_active" padding="5" unsigned="true" nullable="false" default="1"
+                comment="Is Active"/>
+        <column xsi:type="text" name="config_json" nullable="true" comment="Exporter-Specific Config (JSON)"/>
+        <column xsi:type="timestamp" name="last_run_at" nullable="true" comment="Last Run At"/>
+        <column xsi:type="varchar" name="last_status" nullable="true" length="20" comment="Last Status"/>
+        <column xsi:type="text" name="last_message" nullable="true" comment="Last Status Message"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="campaign_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="GTSTUDIO_LLMO_CAMPAIGN_CODE">
+            <column name="code"/>
+        </constraint>
+        <index referenceId="GTSTUDIO_LLMO_CAMPAIGN_EXPORTER" indexType="btree">
+            <column name="exporter_code"/>
+        </index>
+    </table>
+</schema>

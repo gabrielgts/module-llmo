@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Cache/etc/cache.xsd">
+    <type name="llmo_feed_cache" translate="label,description"
+          instance="Gtstudio\Llmo\Model\Cache\FeedCache">
+        <label>LLMO Product Feed</label>
+        <description>Cache for the AI-ready product feed (per exporter and store).</description>
+    </type>
+    <type name="llmo_dashboard_cache" translate="label,description"
+          instance="Gtstudio\Llmo\Model\Cache\DashboardCache">
+        <label>LLMO Dashboard</label>
+        <description>Cache for the LLMO visibility dashboard snapshot.</description>
+    </type>
+</config>

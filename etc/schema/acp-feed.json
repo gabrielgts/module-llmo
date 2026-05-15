@@ -1,0 +1,101 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://gtstudio.local/schemas/llmo/acp-feed.json",
+    "title": "LLMO ACP Product Feed",
+    "description": "Agentic Commerce Protocol-style product feed produced by Gtstudio_Llmo.",
+    "type": "object",
+    "required": ["version", "protocol", "generated_at", "store", "currency", "count", "products"],
+    "additionalProperties": true,
+    "properties": {
+        "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+$"
+        },
+        "protocol": {
+            "type": "string",
+            "const": "agentic-commerce"
+        },
+        "generated_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "store": {
+            "type": "string",
+            "minLength": 1
+        },
+        "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+        },
+        "count": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "products": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/product" }
+        }
+    },
+    "definitions": {
+        "product": {
+            "type": "object",
+            "required": ["id", "title", "link", "availability", "condition", "currency"],
+            "additionalProperties": true,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "gtin": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "description": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "image_link": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "additional_image_links": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "uri" }
+                },
+                "availability": {
+                    "type": "string",
+                    "enum": ["in_stock", "out_of_stock", "preorder", "backorder"]
+                },
+                "condition": {
+                    "type": "string",
+                    "enum": ["new", "refurbished", "used"]
+                },
+                "price": {
+                    "type": ["number", "null"],
+                    "minimum": 0
+                },
+                "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                },
+                "brand": {
+                    "type": "string"
+                },
+                "category_path": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "additional_attributes": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        }
+    }
+}

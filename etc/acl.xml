@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Gtstudio_AiConnector::gtstudio">
+
+                    <!-- LLMO umbrella resource — checked by all LLMO controllers -->
+                    <resource id="Gtstudio_Llmo::management" title="LLMO" sortOrder="30">
+                        <resource id="Gtstudio_Llmo::dashboard"   title="View Dashboard"      sortOrder="10"/>
+                        <resource id="Gtstudio_Llmo::feed"        title="Manage Product Feed" sortOrder="20"/>
+                        <resource id="Gtstudio_Llmo::validation"  title="View Validation Log" sortOrder="30"/>
+                        <resource id="Gtstudio_Llmo::crawlers"    title="Manage Crawlers"     sortOrder="40"/>
+                        <resource id="Gtstudio_Llmo::attribution" title="View Attribution"    sortOrder="50"/>
+                        <resource id="Gtstudio_Llmo::campaigns"   title="Manage Campaigns"    sortOrder="60"/>
+                        <resource id="Gtstudio_Llmo::config"      title="LLMO Settings"       sortOrder="70"/>
+                    </resource>
+
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

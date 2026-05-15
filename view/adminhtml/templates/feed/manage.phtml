@@ -1,0 +1,101 @@
+<?php
+/** @var \Gtstudio\Llmo\Block\Adminhtml\Feed\Manage $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$exporters = $block->getExporters();
+$stores    = $block->getStores();
+$runs      = $block->getRecentRuns();
+?>
+<div class="llmo-feed-manage">
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Registered Exporters')) ?></span>
+        </div>
+        <?php if ($exporters === []): ?>
+            <p><?= $escaper->escapeHtml(__('No exporters are registered.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Exporter')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Code')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Store')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Static File')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Action')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($exporters as $exporter): ?>
+                    <?php foreach ($stores as $store): ?>
+                        <?php $path = $block->getFeedFilePath($exporter, $store); ?>
+                        <tr>
+                            <td><?= $escaper->escapeHtml($exporter->label()) ?></td>
+                            <td><code><?= $escaper->escapeHtml($exporter->code()) ?></code></td>
+                            <td><?= $escaper->escapeHtml($store->getCode()) ?></td>
+                            <td>
+                                <?php if ($path !== null): ?>
+                                    <code><?= $escaper->escapeHtml($path) ?></code>
+                                <?php else: ?>
+                                    <span class="grid-severity-minor">
+                                        <?= $escaper->escapeHtml(__('Not generated yet')) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <form action="<?= $escaper->escapeUrl($block->getRebuildUrl()) ?>" method="post">
+                                    <input type="hidden" name="form_key"
+                                           value="<?= $escaper->escapeHtml($block->getFormKey()) ?>"/>
+                                    <input type="hidden" name="exporter"
+                                           value="<?= $escaper->escapeHtml($exporter->code()) ?>"/>
+                                    <input type="hidden" name="store_id"
+                                           value="<?= (int) $store->getId() ?>"/>
+                                    <button type="submit" class="action-secondary">
+                                        <?= $escaper->escapeHtml(__('Rebuild')) ?>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Recent Runs')) ?></span>
+        </div>
+        <?php if ($runs === []): ?>
+            <p><?= $escaper->escapeHtml(__('No feed runs recorded yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th><?= $escaper->escapeHtml(__('Exporter')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Store ID')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Status')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Items')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Started')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Finished')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Error')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($runs as $run): ?>
+                    <tr>
+                        <td><?= (int) $run->getData('run_id') ?></td>
+                        <td><code><?= $escaper->escapeHtml((string) $run->getData('exporter_code')) ?></code></td>
+                        <td><?= (int) $run->getData('store_id') ?></td>
+                        <td><?= $escaper->escapeHtml((string) $run->getData('status')) ?></td>
+                        <td><?= (int) $run->getData('item_count') ?></td>
+                        <td><?= $escaper->escapeHtml((string) $run->getData('started_at')) ?></td>
+                        <td><?= $escaper->escapeHtml((string) ($run->getData('finished_at') ?? '')) ?></td>
+                        <td><?= $escaper->escapeHtml((string) ($run->getData('error_message') ?? '')) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

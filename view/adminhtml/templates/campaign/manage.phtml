@@ -1,0 +1,132 @@
+<?php
+/** @var \Gtstudio\Llmo\Block\Adminhtml\Campaign\Manage $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$campaigns = $block->getCampaigns();
+$exporters = $block->getExporters();
+?>
+<div class="llmo-campaign">
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Create campaign')) ?></span>
+        </div>
+        <form action="<?= $escaper->escapeUrl($block->getSaveUrl()) ?>" method="post">
+            <input type="hidden" name="form_key"
+                   value="<?= $escaper->escapeHtml($block->getFormKey()) ?>"/>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-campaign-code">
+                    <?= $escaper->escapeHtml(__('Code')) ?>
+                </label>
+                <input type="text" id="llmo-campaign-code" name="code"
+                       class="admin__control-text" required="required"/>
+            </div>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-campaign-name">
+                    <?= $escaper->escapeHtml(__('Name')) ?>
+                </label>
+                <input type="text" id="llmo-campaign-name" name="name"
+                       class="admin__control-text" required="required"/>
+            </div>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-campaign-exporter">
+                    <?= $escaper->escapeHtml(__('Exporter')) ?>
+                </label>
+                <select id="llmo-campaign-exporter" name="exporter_code" class="admin__control-select">
+                    <?php foreach ($exporters as $exporter): ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($exporter->code()) ?>">
+                            <?= $escaper->escapeHtml($exporter->label()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-campaign-target-url">
+                    <?= $escaper->escapeHtml(__('Target URL (optional)')) ?>
+                </label>
+                <input type="url" id="llmo-campaign-target-url" name="target_url"
+                       class="admin__control-text"/>
+            </div>
+            <div class="admin__field">
+                <label class="admin__field-label" for="llmo-campaign-active">
+                    <?= $escaper->escapeHtml(__('Active')) ?>
+                </label>
+                <input type="checkbox" id="llmo-campaign-active" name="is_active" value="1" checked="checked"/>
+            </div>
+            <button type="submit" class="action-primary">
+                <?= $escaper->escapeHtml(__('Save campaign')) ?>
+            </button>
+        </form>
+    </div>
+
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('Campaigns')) ?></span>
+        </div>
+        <?php if ($campaigns === []): ?>
+            <p><?= $escaper->escapeHtml(__('No campaigns yet.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th><?= $escaper->escapeHtml(__('Code')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Name')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Exporter')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Target URL')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Active')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Last Run')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Last Status')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Actions')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($campaigns as $campaign): ?>
+                    <tr>
+                        <td><?= (int) $campaign->getCampaignId() ?></td>
+                        <td><code><?= $escaper->escapeHtml($campaign->getCode()) ?></code></td>
+                        <td><?= $escaper->escapeHtml($campaign->getName()) ?></td>
+                        <td><code><?= $escaper->escapeHtml($campaign->getExporterCode()) ?></code></td>
+                        <td><?= $escaper->escapeHtml((string) ($campaign->getTargetUrl() ?? '')) ?></td>
+                        <td>
+                            <?= $campaign->isActive()
+                                ? $escaper->escapeHtml(__('yes'))
+                                : $escaper->escapeHtml(__('no')) ?>
+                        </td>
+                        <td><?= $escaper->escapeHtml((string) ($campaign->getLastRunAt() ?? '—')) ?></td>
+                        <td>
+                            <?= $escaper->escapeHtml((string) ($campaign->getLastStatus() ?? '—')) ?>
+                            <?php if ($campaign->getLastMessage()): ?>
+                                <br/>
+                                <small>
+                                    <?= $escaper->escapeHtml($campaign->getLastMessage()) ?>
+                                </small>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <form action="<?= $escaper->escapeUrl($block->getRunUrl()) ?>"
+                                  method="post" style="display:inline">
+                                <input type="hidden" name="form_key"
+                                       value="<?= $escaper->escapeHtml($block->getFormKey()) ?>"/>
+                                <input type="hidden" name="campaign_id"
+                                       value="<?= (int) $campaign->getCampaignId() ?>"/>
+                                <button type="submit" class="action-secondary">
+                                    <?= $escaper->escapeHtml(__('Run')) ?>
+                                </button>
+                            </form>
+                            <form action="<?= $escaper->escapeUrl($block->getDeleteUrl()) ?>"
+                                  method="post" style="display:inline">
+                                <input type="hidden" name="form_key"
+                                       value="<?= $escaper->escapeHtml($block->getFormKey()) ?>"/>
+                                <input type="hidden" name="campaign_id"
+                                       value="<?= (int) $campaign->getCampaignId() ?>"/>
+                                <button type="submit" class="action-secondary">
+                                    <?= $escaper->escapeHtml(__('Delete')) ?>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>
