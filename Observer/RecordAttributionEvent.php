@@ -44,7 +44,7 @@ class RecordAttributionEvent implements ObserverInterface
             $this->recordEvent($order);
             $this->attributionSession->clear();
         } catch (\Throwable $th) {
-            $this->logger->error('[Gtstudio_Llmo] RecordAttributionEvent failed', [
+            $this->logger->critical('[Gtstudio_Llmo] RecordAttributionEvent failed', [
                 'exception' => $th,
             ]);
         }

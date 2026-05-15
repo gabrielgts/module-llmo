@@ -4,6 +4,7 @@ namespace Gtstudio\Llmo\Controller\Adminhtml\Campaign;
 
 use Gtstudio\Llmo\Model\CampaignFactory;
 use Gtstudio\Llmo\Model\CampaignManager;
+use Gtstudio\Llmo\Model\Validator\UrlValidator;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -21,12 +22,14 @@ class Save extends Action implements HttpPostActionInterface
      * @param Context $context
      * @param CampaignFactory $campaignFactory
      * @param CampaignManager $campaignManager
+     * @param UrlValidator $urlValidator
      */
     // phpcs:ignore
     public function __construct(
         Context $context,
         private readonly CampaignFactory $campaignFactory,
-        private readonly CampaignManager $campaignManager
+        private readonly CampaignManager $campaignManager,
+        private readonly UrlValidator $urlValidator
     ) {
         parent::__construct($context);
     }
@@ -38,6 +41,15 @@ class Save extends Action implements HttpPostActionInterface
     {
         $request = $this->getRequest();
         $campaignId = (int) ($request->getParam('campaign_id') ?? 0);
+        $redirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+
+        $rawTargetUrl = (string) ($request->getParam('target_url') ?? '');
+        if ($rawTargetUrl !== '' && !$this->urlValidator->isValid($rawTargetUrl)) {
+            $this->messageManager->addErrorMessage(
+                __('Target URL must be a valid HTTPS address (e.g. https://example.com/feed).')
+            );
+            return $redirect->setPath('llmo/campaign/index');
+        }
 
         try {
             $campaign = $campaignId > 0
@@ -47,7 +59,7 @@ class Save extends Action implements HttpPostActionInterface
             $campaign->setCode((string) $request->getParam('code'));
             $campaign->setName((string) $request->getParam('name'));
             $campaign->setExporterCode((string) $request->getParam('exporter_code'));
-            $campaign->setTargetUrl($request->getParam('target_url') ?: null);
+            $campaign->setTargetUrl($rawTargetUrl !== '' ? $rawTargetUrl : null);
             $campaign->setIsActive((bool) $request->getParam('is_active'));
 
             $this->campaignManager->save($campaign);
@@ -61,7 +73,6 @@ class Save extends Action implements HttpPostActionInterface
             );
         }
 
-        $redirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $redirect->setPath('llmo/campaign/index');
     }
 }

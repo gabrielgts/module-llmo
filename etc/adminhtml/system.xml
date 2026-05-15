@@ -36,6 +36,13 @@
                     <label>Rebuild Schedule</label>
                     <comment>Standard cron expression. Default: 0 */2 * * * (every 2 hours).</comment>
                 </field>
+
+                <field id="public_rest_api" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Public REST Endpoint</label>
+                    <comment>When enabled, GET /V1/llmo/feed is accessible without authentication — intended for AI platform integrations that pull feeds via API. Disabled by default; use the static file at /llmo/feed/index for crawler access instead.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
 
             <group id="crawlers" translate="label" sortOrder="30"

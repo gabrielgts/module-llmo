@@ -7,6 +7,7 @@ use Gtstudio\Llmo\Model\Feed\ExporterPool;
 use Gtstudio\Llmo\Model\Feed\FeedPublisher;
 use Gtstudio\Llmo\Model\ResourceModel\Campaign as CampaignResource;
 use Gtstudio\Llmo\Model\ResourceModel\Campaign\CollectionFactory;
+use Gtstudio\Llmo\Model\Validator\UrlValidator;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -27,6 +28,7 @@ class CampaignManager
      * @param ExporterPool $exporterPool
      * @param FeedPublisher $feedPublisher
      * @param LoggerInterface $logger
+     * @param UrlValidator $urlValidator
      */
     // phpcs:ignore
     public function __construct(
@@ -35,7 +37,8 @@ class CampaignManager
         private readonly CollectionFactory $collectionFactory,
         private readonly ExporterPool $exporterPool,
         private readonly FeedPublisher $feedPublisher,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly UrlValidator $urlValidator
     ) {
     }
 
@@ -80,6 +83,13 @@ class CampaignManager
         if (!$this->exporterPool->has($campaign->getExporterCode())) {
             throw new CouldNotSaveException(
                 __('Unknown exporter code "%1".', $campaign->getExporterCode())
+            );
+        }
+
+        $targetUrl = $campaign->getTargetUrl();
+        if ($targetUrl !== null && !$this->urlValidator->isValid($targetUrl)) {
+            throw new CouldNotSaveException(
+                __('Campaign target URL must be a valid HTTPS address.')
             );
         }
         try {

@@ -43,13 +43,37 @@ class AcpSchemaValidator implements SchemaValidatorInterface
      */
     public function validateBody(string $exporterCode, string $body): ValidationResultInterface
     {
+        if (\trim($body) === '') {
+            return $this->resultBuilder->build($exporterCode, [[
+                'severity' => ValidationIssueInterface::SEVERITY_ERROR,
+                'source' => self::SOURCE,
+                'code' => 'empty_body',
+                'message' => 'Feed body is empty.',
+                'path' => null,
+            ]]);
+        }
+
         $decoded = \json_decode($body);
-        if ($decoded === null && \json_last_error() !== \JSON_ERROR_NONE) {
+
+        // Guard 1: decode failed — json_last_error() is non-zero.
+        if (\json_last_error() !== \JSON_ERROR_NONE) {
             return $this->resultBuilder->build($exporterCode, [[
                 'severity' => ValidationIssueInterface::SEVERITY_ERROR,
                 'source' => self::SOURCE,
                 'code' => 'invalid_json',
                 'message' => 'Feed body is not valid JSON: ' . \json_last_error_msg(),
+                'path' => null,
+            ]]);
+        }
+
+        // Guard 2: body was the literal JSON value `null` — technically valid
+        // JSON but never a valid ACP feed object.
+        if ($decoded === null) {
+            return $this->resultBuilder->build($exporterCode, [[
+                'severity' => ValidationIssueInterface::SEVERITY_ERROR,
+                'source' => self::SOURCE,
+                'code' => 'invalid_json',
+                'message' => 'Feed body decoded to null; expected a JSON object.',
                 'path' => null,
             ]]);
         }

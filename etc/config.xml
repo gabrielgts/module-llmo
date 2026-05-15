@@ -9,6 +9,7 @@
             <feed>
                 <page_size>200</page_size>
                 <rebuild_schedule>0 */2 * * *</rebuild_schedule>
+                <public_rest_api>0</public_rest_api>
             </feed>
             <crawlers>
                 <allowed_bots>GPTBot,OAI-SearchBot,ClaudeBot,anthropic-ai,PerplexityBot,Google-Extended,Applebot-Extended</allowed_bots>

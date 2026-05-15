@@ -48,7 +48,7 @@ class CaptureAttribution implements ObserverInterface
             $context = $this->extractor->extract($this->request);
             $this->attributionSession->captureIfEmpty($context);
         } catch (\Throwable $th) {
-            $this->logger->error('[Gtstudio_Llmo] CaptureAttribution observer failed', [
+            $this->logger->critical('[Gtstudio_Llmo] CaptureAttribution observer failed', [
                 'exception' => $th,
             ]);
         }
