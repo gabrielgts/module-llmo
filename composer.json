@@ -2,7 +2,7 @@
     "name": "gtstudio/module-llmo",
     "description": "LLMO (Large Language Model Optimization) for Magento 2. ACP-style product feed, schema validation, AI crawler controls, AI-ready content fields, attribution and conversion tracking, campaign abstraction for AI ads, and an LLMO visibility dashboard.",
     "type": "magento2-module",
-    "license": "BUSL-1.1",
+    "license": "MIT",
     "authors": [
         {
             "name": "Gabriel Silveira",

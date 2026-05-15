@@ -66,4 +66,4 @@ bin/magento cache:flush
 
 ## License
 
-Business Source License 1.1 — see [LICENSE](LICENSE). Converts to MIT four years after release.
+MIT — see [LICENSE](LICENSE).
