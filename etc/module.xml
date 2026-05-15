@@ -4,7 +4,6 @@
     <module name="Gtstudio_Llmo">
         <sequence>
             <module name="Gtstudio_AiConnector"/>
-            <module name="Gtstudio_AiAgents"/>
         </sequence>
     </module>
 </config>
