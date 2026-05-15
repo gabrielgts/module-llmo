@@ -18,9 +18,9 @@ class UrlValidator
      * rejecting every scheme other than `https`.
      */
     private const HTTPS_PATTERN =
-        '#^https://'
-        . '[a-zA-Z0-9\-._~%!$&\'()*+,;=:@/?\[\]#]+'
-        . '$#';
+        '~^https://'
+        . '[a-zA-Z0-9\-._~%!$&\'()*+,;=:@/?#\[\]]+'
+        . '$~';
 
     /**
      * Check whether the given URL is a valid HTTPS address.

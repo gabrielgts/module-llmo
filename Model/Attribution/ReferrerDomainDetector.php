@@ -79,7 +79,7 @@ class ReferrerDomainDetector
      */
     private function extractHost(string $url): string
     {
-        if (\preg_match('#^(?:https?://)?([^/?#\s]+)([^?#]*)#i', $url, $matches) === 1) {
+        if (\preg_match('~^(?:https?://)?([^/?#\s]+)([^?#]*)~i', $url, $matches) === 1) {
             return $matches[1] . $matches[2];
         }
         return $url;
