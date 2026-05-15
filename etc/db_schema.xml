@@ -94,6 +94,8 @@
                 comment="LLMO UTM Campaign"/>
         <column xsi:type="varchar" name="llmo_utm_content" nullable="true" length="255"
                 comment="LLMO UTM Content"/>
+        <column xsi:type="varchar" name="llmo_referrer_source" nullable="true" length="64"
+                comment="LLMO Canonical AI Platform From HTTP Referer"/>
         <index referenceId="GTSTUDIO_LLMO_SALES_ORDER_REFERRER_AGENT" indexType="btree">
             <column name="llmo_referrer_agent"/>
         </index>
@@ -115,6 +117,8 @@
         <column xsi:type="varchar" name="utm_medium" nullable="true" length="64" comment="UTM Medium"/>
         <column xsi:type="varchar" name="utm_campaign" nullable="true" length="128" comment="UTM Campaign"/>
         <column xsi:type="varchar" name="utm_content" nullable="true" length="255" comment="UTM Content"/>
+        <column xsi:type="varchar" name="http_referrer_source" nullable="true" length="64"
+                comment="Canonical AI Platform From HTTP Referer"/>
         <column xsi:type="decimal" name="revenue" scale="4" precision="20" nullable="false" default="0"
                 comment="Order Grand Total"/>
         <column xsi:type="varchar" name="currency" nullable="false" length="3" default="USD" comment="Currency"/>

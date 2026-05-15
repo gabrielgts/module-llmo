@@ -5,18 +5,22 @@ namespace Gtstudio\Llmo\Model\Attribution;
 /**
  * Immutable bundle of LLMO attribution signals captured for one session.
  *
- * Keys: `referrer_agent`, `utm_source`, `utm_medium`, `utm_campaign`,
- * `utm_content`, `first_touch_at` (UTC ISO-8601).
+ * Priority (highest-confidence first):
+ *   1. `utmSource`       — explicit UTM tag on the inbound URL
+ *   2. `referrerAgent`   — AI bot User-Agent (crawler-driven)
+ *   3. `referrerSource`  — canonical AI platform name derived from HTTP Referer
+ *   4. (falls through to "direct")
  */
 class AttributionContext
 {
     /**
-     * @param string|null $referrerAgent
-     * @param string|null $utmSource
-     * @param string|null $utmMedium
-     * @param string|null $utmCampaign
-     * @param string|null $utmContent
-     * @param string|null $firstTouchAt
+     * @param string|null $referrerAgent   AI bot UA code from UserAgentDetector.
+     * @param string|null $utmSource       Value of `utm_source` query param.
+     * @param string|null $utmMedium       Value of `utm_medium` query param.
+     * @param string|null $utmCampaign     Value of `utm_campaign` query param.
+     * @param string|null $utmContent      Value of `utm_content` query param.
+     * @param string|null $firstTouchAt    UTC ISO-8601 timestamp of first touch.
+     * @param string|null $referrerSource  Canonical label from HTTP Referer host.
      */
     // phpcs:ignore
     public function __construct(
@@ -25,14 +29,15 @@ class AttributionContext
         public readonly ?string $utmMedium = null,
         public readonly ?string $utmCampaign = null,
         public readonly ?string $utmContent = null,
-        public readonly ?string $firstTouchAt = null
+        public readonly ?string $firstTouchAt = null,
+        public readonly ?string $referrerSource = null
     ) {
     }
 
     /**
      * Serialise to a plain array suitable for session storage.
      *
-     * @return array<string, string|null>
+     * @return array
      */
     public function toArray(): array
     {
@@ -43,6 +48,7 @@ class AttributionContext
             'utm_campaign' => $this->utmCampaign,
             'utm_content' => $this->utmContent,
             'first_touch_at' => $this->firstTouchAt,
+            'referrer_source' => $this->referrerSource,
         ];
     }
 
@@ -57,6 +63,7 @@ class AttributionContext
             && $this->utmSource === null
             && $this->utmMedium === null
             && $this->utmCampaign === null
-            && $this->utmContent === null;
+            && $this->utmContent === null
+            && $this->referrerSource === null;
     }
 }

@@ -7,17 +7,24 @@ use Magento\Framework\App\RequestInterface;
 
 /**
  * Builds an `AttributionContext` from an incoming request's UTM params,
- * referrer header, and user-agent.
+ * HTTP Referer header, and User-Agent.
+ *
+ * Signal priority (applied by downstream COALESCE):
+ *   1. utm_source         — explicit, highest confidence
+ *   2. bot UA             — AI crawler recognition
+ *   3. HTTP Referer host  — fallback for un-tagged AI links (e.g. ChatGPT)
  */
 class AttributionExtractor
 {
     private const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
 
     /**
+     * @param ReferrerDomainDetector $referrerDomainDetector
      * @param UserAgentDetector $userAgentDetector
      */
     // phpcs:ignore
     public function __construct(
+        private readonly ReferrerDomainDetector $referrerDomainDetector,
         private readonly UserAgentDetector $userAgentDetector
     ) {
     }
@@ -39,13 +46,17 @@ class AttributionExtractor
         $userAgent = (string) $request->getServer('HTTP_USER_AGENT', '');
         $botCode = $this->userAgentDetector->detect($userAgent);
 
+        $referer = (string) $request->getServer('HTTP_REFERER', '');
+        $referrerSource = $this->referrerDomainDetector->detect($referer);
+
         return new AttributionContext(
             $botCode,
             $utm['utm_source'],
             $utm['utm_medium'],
             $utm['utm_campaign'],
             $utm['utm_content'],
-            \gmdate(\DateTimeInterface::ATOM)
+            \gmdate(\DateTimeInterface::ATOM),
+            $referrerSource
         );
     }
 }

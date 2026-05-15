@@ -39,7 +39,11 @@ class AttributionFunnelCollector
             ->reset(Select::COLUMNS)
             ->columns([
                 'source' => new \Zend_Db_Expr(
-                    "COALESCE(NULLIF(referrer_agent, ''), NULLIF(utm_source, ''), 'direct')"
+                    "COALESCE("
+                    . "NULLIF(utm_source, ''), "
+                    . "NULLIF(referrer_agent, ''), "
+                    . "NULLIF(http_referrer_source, ''), "
+                    . "'direct')"
                 ),
                 'orders' => new \Zend_Db_Expr('COUNT(*)'),
                 'revenue' => new \Zend_Db_Expr('SUM(revenue)'),

@@ -65,7 +65,8 @@
             "llmo_utm_source": true,
             "llmo_utm_medium": true,
             "llmo_utm_campaign": true,
-            "llmo_utm_content": true
+            "llmo_utm_content": true,
+            "llmo_referrer_source": true
         },
         "index": {
             "GTSTUDIO_LLMO_SALES_ORDER_REFERRER_AGENT": true,
@@ -82,6 +83,7 @@
             "utm_medium": true,
             "utm_campaign": true,
             "utm_content": true,
+            "http_referrer_source": true,
             "revenue": true,
             "currency": true,
             "store_id": true,

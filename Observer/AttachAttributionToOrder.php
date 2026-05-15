@@ -45,6 +45,7 @@ class AttachAttributionToOrder implements ObserverInterface
             $order->setData('llmo_utm_medium', $context->utmMedium);
             $order->setData('llmo_utm_campaign', $context->utmCampaign);
             $order->setData('llmo_utm_content', $context->utmContent);
+            $order->setData('llmo_referrer_source', $context->referrerSource);
         } catch (\Throwable $th) {
             $this->logger->error('[Gtstudio_Llmo] AttachAttributionToOrder failed', [
                 'exception' => $th,

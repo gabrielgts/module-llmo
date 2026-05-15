@@ -66,6 +66,7 @@ class RecordAttributionEvent implements ObserverInterface
         $event->setData('utm_medium', $order->getData('llmo_utm_medium'));
         $event->setData('utm_campaign', $order->getData('llmo_utm_campaign'));
         $event->setData('utm_content', $order->getData('llmo_utm_content'));
+        $event->setData('http_referrer_source', $order->getData('llmo_referrer_source'));
         $event->setData('revenue', (float) $order->getGrandTotal());
         $event->setData('currency', (string) ($order->getOrderCurrencyCode() ?? 'USD'));
         $event->setData('store_id', (int) $order->getStoreId());

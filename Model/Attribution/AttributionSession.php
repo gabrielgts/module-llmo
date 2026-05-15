@@ -39,7 +39,8 @@ class AttributionSession
             isset($raw['utm_medium']) ? (string) $raw['utm_medium'] : null,
             isset($raw['utm_campaign']) ? (string) $raw['utm_campaign'] : null,
             isset($raw['utm_content']) ? (string) $raw['utm_content'] : null,
-            isset($raw['first_touch_at']) ? (string) $raw['first_touch_at'] : null
+            isset($raw['first_touch_at']) ? (string) $raw['first_touch_at'] : null,
+            isset($raw['referrer_source']) ? (string) $raw['referrer_source'] : null
         );
     }
 
